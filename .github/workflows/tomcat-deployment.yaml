@@ -37,25 +37,25 @@ jobs:
           cd target
           mv CustomerService-0.0.1-SNAPSHOT.war CS.war
 
-      - name: verify CATALINA is configured or not
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            echo %CATALINA_HOME%
+      # - name: verify CATALINA is configured or not
+      #   uses: appleboy/ssh-action@v0.1.6
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USER }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     script: |
+      #       echo %CATALINA_HOME%
 
-      - name: Copy the CS.War file to C:\tomcat\webapps\
+      - name: Copy the CS.War file to C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps
         uses: marcodallasanta/ssh-scp-deploy@v1.2.0
         with:
           local: './target/CS.war'
-          remote: 'C:\tomcat\webapps\'
+          remote: 'C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps\'
           host: ${{secrets.HOST}}
           user: ${{secrets.USER}}
           password: ${{secrets.PASSWORD}}
           ssh_options: -o StrictHostKeyChecking=no
-          pre_upload: C:\tomcat\bin\catalina.bat stop && rmdir /s /q C:\tomcat\webapps\CS
-          post_upload: C:\tomcat\bin\catalina.bat start
+          pre_upload: net stop Tomcat10 && rmdir /s /q C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps\CS
+          post_upload: net start Tomcat10
 
       
