@@ -49,5 +49,14 @@ jobs:
       #     pre_upload: export CATALINA_HOME=C:\tomcat && C:\tomcat\bin\catalina.bat stop && rmdir /s /q CS
       #     post_upload: C:\tomcat\bin\catalina.bat start
 
+      
       - name: verify CATALINA is configured or not
-        run: echo %CATALINA_HOME%
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            echo %CATALINA_HOME%
+            dir
