@@ -46,5 +46,5 @@ jobs:
           user: ${{secrets.USER}}
           password: ${{secrets.PASSWORD}}
           ssh_options: -o StrictHostKeyChecking=no
-          pre_upload: C:\tomcat\bin\catalina.bat stop && rmdir /s /q CS
+          pre_upload: export CATALINA_HOME=C:\tomcat && C:\tomcat\bin\catalina.bat stop && rmdir /s /q CS
           post_upload: C:\tomcat\bin\catalina.bat start
