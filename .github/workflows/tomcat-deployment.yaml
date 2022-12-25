@@ -55,7 +55,7 @@ jobs:
           user: ${{secrets.USER}}
           password: ${{secrets.PASSWORD}}
           ssh_options: -o StrictHostKeyChecking=no
-          pre_upload: net stop Tomcat10 && rmdir /s /q C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps\CS
+          pre_upload: net stop Tomcat10 && rmdir /s /q "C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps\CS"
           post_upload: net start Tomcat10
 
       
