@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build Springboot App
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download the Source Code
         uses: actions/checkout@v3
@@ -37,6 +37,15 @@ jobs:
           cd target
           mv CustomerService-0.0.1-SNAPSHOT.war CS.war
 
+      - name: verify CATALINA is configured or not
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            echo %CATALINA_HOME%
+
       - name: Copy the CS.War file to C:\tomcat\webapps\
         uses: marcodallasanta/ssh-scp-deploy@v1.2.0
         with:
@@ -46,17 +55,7 @@ jobs:
           user: ${{secrets.USER}}
           password: ${{secrets.PASSWORD}}
           ssh_options: -o StrictHostKeyChecking=no
-          pre_upload: export CATALINA_HOME=C:\tomcat && C:\tomcat\bin\catalina.bat stop && rmdir /s /q CS
+          pre_upload: C:\tomcat\bin\catalina.bat stop && rmdir /s /q C:\tomcat\webapps\CS
           post_upload: C:\tomcat\bin\catalina.bat start
 
       
-      # - name: verify CATALINA is configured or not
-      #   uses: appleboy/ssh-action@v0.1.6
-      #   with:
-      #     host: ${{ secrets.HOST }}
-      #     username: ${{ secrets.USER }}
-      #     password: ${{ secrets.PASSWORD }}
-      #     port: ${{ secrets.PORT }}
-      #     script: |
-      #       echo %CATALINA_HOME%
-      #       dir
