@@ -1,0 +1,42 @@
+name: Deploying Springboot Packag(war) to tomcat on Windows Server
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build Springboot App
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Download the Source Code
+        uses: actions/checkout@v3
+      
+      - name: Setup the Java 17
+        uses:  actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Verify the Java Version
+        run: java --version
+
+      - name: Build the Application
+        run: ./mvnw package
+      
+      - name: Check the Public Zip File
+        run: ls -l ./target/
+
+      # - name: Copy the Public Folder to Ubuntu
+      #   uses: marcodallasanta/ssh-scp-deploy@v1.2.0
+      #   with:
+      #     local: 'public/*'
+      #     remote: 'public/'
+      #     host: ${{secrets.HOST}}
+      #     user: ${{secrets.USER}}
+      #     password: ${{secrets.PASSWORD}}
+      #     ssh_options: -o StrictHostKeyChecking=no
+      #     pre_upload: rmdir /s /q public
+      #     post_upload: iisreset /stop && xcopy /s /y public C:\inetpub\wwwroot\ && iisreset /start
