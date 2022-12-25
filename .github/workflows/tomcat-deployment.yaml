@@ -29,17 +29,22 @@ jobs:
       - name: Build the Application
         run: ./mvnw package
       
-      - name: Check the Public Zip File
+      - name: Verify the War file is created or not
         run: ls -l ./target/
 
-      # - name: Copy the Public Folder to Ubuntu
-      #   uses: marcodallasanta/ssh-scp-deploy@v1.2.0
-      #   with:
-      #     local: 'public/*'
-      #     remote: 'public/'
-      #     host: ${{secrets.HOST}}
-      #     user: ${{secrets.USER}}
-      #     password: ${{secrets.PASSWORD}}
-      #     ssh_options: -o StrictHostKeyChecking=no
-      #     pre_upload: rmdir /s /q public
-      #     post_upload: iisreset /stop && xcopy /s /y public C:\inetpub\wwwroot\ && iisreset /start
+      - name: Rename the Long File name to Short File
+        run: |
+          cd target
+          mv CustomerService-0.0.1-SNAPSHOT.war CS.war
+
+      - name: Copy the CS.War file to C:\tomcat\webapps\
+        uses: marcodallasanta/ssh-scp-deploy@v1.2.0
+        with:
+          local: './target/CS.war'
+          remote: 'C:\tomcat\webapps\'
+          host: ${{secrets.HOST}}
+          user: ${{secrets.USER}}
+          password: ${{secrets.PASSWORD}}
+          ssh_options: -o StrictHostKeyChecking=no
+          pre_upload: C:\tomcat\bin\catalina.bat stop && rmdir /s /q CS
+          post_upload: C:\tomcat\bin\catalina.bat start
