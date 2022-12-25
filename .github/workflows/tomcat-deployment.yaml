@@ -23,6 +23,9 @@ jobs:
       - name: Verify the Java Version
         run: java --version
 
+      - name: Make mvnw Exectuable
+        run: chmod +x mvnw*
+
       - name: Build the Application
         run: ./mvnw package
       
